@@ -2,7 +2,7 @@
 
 Execute PostHog [HogQL](https://posthog.com/docs/hogql) queries from your JavaScript code
 
-## Installation
+## Installation
 
 ```bash
 npm install --save hogql
