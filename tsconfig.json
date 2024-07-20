@@ -8,11 +8,11 @@
     "outDir": "./dist/esm",
     "declaration": true,
     "skipLibCheck": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "rootDir": "./src"
   },
   "include": [
     "./src",
-    "./test"
   ],
   "exclude": [
     "node_modules"
