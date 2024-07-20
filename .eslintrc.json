@@ -13,6 +13,7 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
+  "ignorePatterns": ["dist/"],
   "rules": {
     "prettier/prettier": "error",
     "@typescript-eslint/strict-boolean-expressions": "off",

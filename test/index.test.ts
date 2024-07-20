@@ -1,6 +1,9 @@
 import fetchMock from 'fetch-mock';
 
-import { hogql, HogQLError, RateLimitExceededError } from './index';
+import { hogql, HogQLError, RateLimitExceededError } from './../src/index';
+
+type Fetch = typeof fetch;
+type FetchMock = fetchMock.FetchMockSandbox & Fetch;
 
 const DUMMY_API_KEY = 'secret';
 const DUMMY_PROJECT_ID = '123';
@@ -12,6 +15,14 @@ afterEach(() => {
   // after each test to avoid affecting other tests.
   jest.useRealTimers();
 });
+
+const isRateLimitExceededError = (error: unknown): error is RateLimitExceededError => {
+  return error instanceof RateLimitExceededError;
+};
+
+const isHogQLError = (error: unknown): error is HogQLError => {
+  return error instanceof HogQLError;
+};
 
 describe('hogql', () => {
   it('executes a query and returns the results, hitting app.posthog.com by default', async () => {
@@ -32,7 +43,7 @@ describe('hogql', () => {
           },
         },
       },
-    );
+    ) as FetchMock;
 
     const results = await hogql('SELECT id, name FROM users', {
       apiKey: DUMMY_API_KEY,
@@ -67,7 +78,7 @@ describe('hogql', () => {
           },
         },
       },
-    );
+    ) as FetchMock;
 
     const results = await hogql('SELECT id, name FROM users', {
       apiKey: DUMMY_API_KEY,
@@ -108,7 +119,7 @@ describe('hogql', () => {
           },
         },
       },
-    );
+    ) as FetchMock;
 
     try {
       await hogql('SELECT id, name FROM users', {
@@ -118,12 +129,15 @@ describe('hogql', () => {
       });
     } catch (error) {
       expect(error).toBeInstanceOf(RateLimitExceededError);
-      expect(error.message).toBe('Expected available in 123 seconds.');
 
-      expect(error.detail).toBe('Expected available in 123 seconds.');
-      expect(error.type).toBe('throttled_error');
-      expect(error.code).toBe('throttled');
-      expect(error.rateLimitResetsAt).toEqual(new Date('2024-01-01T00:02:03Z'));
+      if (isRateLimitExceededError(error)) {
+        expect(error.message).toBe('Expected available in 123 seconds.');
+
+        expect(error.detail).toBe('Expected available in 123 seconds.');
+        expect(error.type).toBe('throttled_error');
+        expect(error.code).toBe('throttled');
+        expect(error.rateLimitResetsAt).toEqual(new Date('2024-01-01T00:02:03Z'));
+      }
     }
   });
 
@@ -147,7 +161,7 @@ describe('hogql', () => {
           },
         },
       },
-    );
+    ) as FetchMock;
 
     try {
       await hogql('SELECT id, name FROM users', {
@@ -157,11 +171,14 @@ describe('hogql', () => {
       });
     } catch (error) {
       expect(error).toBeInstanceOf(HogQLError);
-      expect(error.message).toBe('A server error occurred.');
 
-      expect(error.detail).toBe('A server error occurred.');
-      expect(error.type).toBe('server_error');
-      expect(error.code).toBe('error');
+      if (isHogQLError(error)) {
+        expect(error.message).toBe('A server error occurred.');
+
+        expect(error.detail).toBe('A server error occurred.');
+        expect(error.type).toBe('server_error');
+        expect(error.code).toBe('error');
+      }
     }
   });
 
@@ -205,7 +222,7 @@ describe('hogql', () => {
             },
           },
         },
-      );
+      ) as FetchMock;
 
     const results = await hogql('SELECT id, name FROM users', {
       apiKey: DUMMY_API_KEY,

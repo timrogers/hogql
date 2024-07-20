@@ -1,8 +1,10 @@
 {
   "name": "hogql",
-  "version": "0.1.0",
+  "version": "0.0.0-development",
   "description": "Execute PostHog HogQL (<https://posthog.com/docs/hogql>) queries from your JavaScript code",
   "main": "dist/commonjs/index.js",
+  "module": "dist/esm/index.js",
+  "homepage": "https://github.com/timrogers/hogql",
   "exports": {
     "require": "./dist/commonjs/index.js",
     "import": "./dist/esm/index.js"
@@ -12,9 +14,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "npm run build:commonjs && npm run build:esm",
-    "build:commonjs": "tsc -p tsconfig.commonjs.json",
-    "build:esm": "tsc -p tsconfig.esm.json",
+    "build": "npx tsc -p tsconfig.json && tsc -p tsconfig-commonjs.json",
+    "prepublish": "npm run build",
     "test": "jest",
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix"
@@ -35,5 +36,14 @@
     "ts-jest": "^29.2.3",
     "tsx": "^4.16.2",
     "typescript": "^5.5.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/timrogers/hogql.git"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ]
   }
 }

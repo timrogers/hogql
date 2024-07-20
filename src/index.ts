@@ -168,9 +168,7 @@ export const hogql = async <T extends HogQLScalar[][] = HogQLScalar[][]>(
           retryOnRateLimit,
         });
       } else {
-        const rateLimitResetsAt = rateLimitResetsInSeconds
-          ? new Date(Date.now() + rateLimitResetsInSeconds * 1000)
-          : null;
+        const rateLimitResetsAt = new Date(Date.now() + rateLimitResetsInSeconds * 1000);
         throw new RateLimitExceededError({ code, detail, rateLimitResetsAt, type });
       }
     } else {
