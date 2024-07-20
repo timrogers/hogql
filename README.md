@@ -14,7 +14,7 @@ npm install --save hogql
 import { hogql } from 'hogql';
 
 (async () => {
-  const { results } = await hogql<[string, string]>('SELECT uuid, event FROM events LIMIT 500', {
+  const { results } = await hogql<[string, string][]>('SELECT uuid, event FROM events LIMIT 500', {
     apiKey: process.env.POSTHOG_API_KEY,
     projectId: process.env.POSTHOG_PROJECT_ID,
   });
