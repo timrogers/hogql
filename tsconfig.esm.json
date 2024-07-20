@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "nodenext",
+    "outDir": "./dist/esm"
+  },
+  "include": ["src/index.ts"],
+  "exclude": ["node_modules"]
+}
