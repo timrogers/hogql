@@ -1,7 +1,7 @@
 {
   "name": "hogql",
   "version": "0.0.0-development",
-  "description": "Execute PostHog HogQL (<https://posthog.com/docs/hogql>) queries from your JavaScript code",
+  "description": "Execute PostHog HogQL (<https://posthog.com/docs/hogql>) queries from your JavaScript code or the command line",
   "main": "dist/commonjs/index.js",
   "module": "dist/esm/index.js",
   "homepage": "https://github.com/timrogers/hogql",
@@ -18,8 +18,10 @@
     "prepublish": "npm run build",
     "test": "jest",
     "lint": "eslint . --ext .ts",
-    "lint-and-fix": "eslint . --ext .ts --fix"
+    "lint-and-fix": "eslint . --ext .ts --fix",
+    "start": "tsx src/bin/hogql.ts"
   },
+  "bin": "dist/commonjs/bin/hogql.js",
   "author": "Tim Rogers",
   "license": "MIT",
   "devDependencies": {
@@ -45,5 +47,8 @@
     "branches": [
       "main"
     ]
+  },
+  "dependencies": {
+    "commander": "^12.1.0"
   }
 }
