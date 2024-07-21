@@ -2,7 +2,8 @@
 
 import { program } from 'commander';
 import { hogql, HogQLError, HogQLScalar } from '../index.js';
-import VERSION from '../version.js';
+
+const VERSION = process.env.NPM_PACKAGE_VERSION || '0.0.0-development';
 
 interface Arguments {
   apiKey?: string;

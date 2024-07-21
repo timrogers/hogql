@@ -14,7 +14,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "npx tsc -p tsconfig.json && tsc -p tsconfig-commonjs.json",
+    "build": "node build.mjs",
     "prepublish": "npm run build",
     "test": "jest",
     "lint": "eslint . --ext .ts",
@@ -27,6 +27,7 @@
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@typescript-eslint/eslint-plugin": "^7.16.1",
+    "esbuild": "^0.23.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
