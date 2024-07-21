@@ -10,7 +10,7 @@ npm install --save hogql
 
 ## Usage
 
-### From JavaScript code
+### From JavaScript code
 
 ```ts
 import { hogql } from 'hogql';
