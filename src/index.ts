@@ -102,8 +102,6 @@ const parseDelayFromThrottledErrorDetail = (detail: string): number => {
   if (match) {
     return parseInt(match[1], 10);
   }
-
-  throw new Error(`Unable to extract delay from throttled error detail`);
 };
 
 const sleep = async (ms: number): Promise<void> =>
