@@ -47,4 +47,6 @@ export default [{
             minimumDescriptionLength: 3,
         }],
     },
+
+    ignores: ["build.mjs", "jest.config.cjs", "eslint.config.mjs"]
 }];
