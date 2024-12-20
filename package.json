@@ -17,8 +17,8 @@
     "build": "node build.mjs",
     "prepublish": "npm run build",
     "test": "jest",
-    "lint": "eslint . --ext .ts",
-    "lint-and-fix": "eslint . --ext .ts --fix",
+    "lint": "eslint .",
+    "lint-and-fix": "eslint . --fix",
     "start": "tsx src/bin/hogql.ts"
   },
   "bin": "dist/commonjs/bin/hogql.js",
