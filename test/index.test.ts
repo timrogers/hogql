@@ -2,13 +2,10 @@ import fetchMock from 'fetch-mock';
 
 import { hogql, HogQLError, RateLimitExceededError } from './../src/index';
 
-type Fetch = typeof fetch;
-type FetchMock = fetchMock.FetchMockSandbox & Fetch;
-
 const DUMMY_API_KEY = 'secret';
 const DUMMY_PROJECT_ID = '123';
 
-fetchMock.config.overwriteRoutes = false;
+fetchMock.mockGlobal();
 
 afterEach(() => {
   // Some tests use fake timers and others use real timers, so we need to restore the original implementation
@@ -26,7 +23,7 @@ const isHogQLError = (error: unknown): error is HogQLError => {
 
 describe('hogql', () => {
   it('executes a query and returns the results, hitting app.posthog.com by default', async () => {
-    const fetch = fetchMock.sandbox().postOnce(
+    fetchMock.postOnce(
       `https://app.posthog.com/api/projects/${DUMMY_PROJECT_ID}/query`,
       {
         results: [
@@ -43,11 +40,10 @@ describe('hogql', () => {
           },
         },
       },
-    ) as FetchMock;
+    );
 
     const results = await hogql('SELECT id, name FROM users', {
       apiKey: DUMMY_API_KEY,
-      fetch,
       projectId: DUMMY_PROJECT_ID,
     });
 
@@ -61,7 +57,7 @@ describe('hogql', () => {
   });
 
   it('executes a query and returns the results, hitting a custom base URL', async () => {
-    const fetch = fetchMock.sandbox().postOnce(
+    fetchMock.postOnce(
       `https://eu.posthog.com/api/projects/${DUMMY_PROJECT_ID}/query`,
       {
         results: [
@@ -78,12 +74,11 @@ describe('hogql', () => {
           },
         },
       },
-    ) as FetchMock;
+    );
 
     const results = await hogql('SELECT id, name FROM users', {
       apiKey: DUMMY_API_KEY,
       baseUrl: 'https://eu.posthog.com',
-      fetch,
       projectId: DUMMY_PROJECT_ID,
     });
 
@@ -100,7 +95,7 @@ describe('hogql', () => {
     jest.useFakeTimers();
     jest.setSystemTime(new Date('2024-01-01'));
 
-    const fetch = fetchMock.sandbox().postOnce(
+    fetchMock.postOnce(
       `https://app.posthog.com/api/projects/${DUMMY_PROJECT_ID}/query`,
       {
         status: 429,
@@ -119,12 +114,11 @@ describe('hogql', () => {
           },
         },
       },
-    ) as FetchMock;
+    );
 
     try {
       await hogql('SELECT id, name FROM users', {
         apiKey: DUMMY_API_KEY,
-        fetch,
         projectId: DUMMY_PROJECT_ID,
       });
     } catch (error) {
@@ -142,7 +136,7 @@ describe('hogql', () => {
   });
 
   it('throws a HogQLError if the query execution fails for any other reason', async () => {
-    const fetch = fetchMock.sandbox().postOnce(
+    fetchMock.postOnce(
       `https://app.posthog.com/api/projects/${DUMMY_PROJECT_ID}/query`,
       {
         status: 500,
@@ -161,7 +155,7 @@ describe('hogql', () => {
           },
         },
       },
-    ) as FetchMock;
+    );
 
     try {
       await hogql('SELECT id, name FROM users', {
@@ -183,8 +177,7 @@ describe('hogql', () => {
   });
 
   it('retries rate limit failures if retryOnRateLimit is enabled', async () => {
-    const fetch = fetchMock
-      .sandbox()
+    fetchMock
       .postOnce(
         `https://app.posthog.com/api/projects/${DUMMY_PROJECT_ID}/query`,
         {
@@ -222,11 +215,10 @@ describe('hogql', () => {
             },
           },
         },
-      ) as FetchMock;
+      );
 
     const results = await hogql('SELECT id, name FROM users', {
       apiKey: DUMMY_API_KEY,
-      fetch,
       projectId: DUMMY_PROJECT_ID,
       retryOnRateLimit: true,
     });
